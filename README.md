@@ -2,6 +2,8 @@
 
 WordPress plugin for Grundy/Kendall Regional Office of Education workshop registration system. Connects to FileMaker Pro database via ODBC and provides frontend workshop display and registration functionality.
 
+**GitHub Repository**: https://github.com/edellingham/roe-workshops-wp-plugin
+
 ## Features
 
 - **ODBC Integration**: Direct connection to FileMaker Pro database
@@ -20,10 +22,33 @@ WordPress plugin for Grundy/Kendall Regional Office of Education workshop regist
 
 ## Installation
 
-1. **Upload Plugin**
+### Option 1: Direct Download from GitHub
+1. **Download Plugin**
+   ```bash
+   # Clone from GitHub
+   git clone https://github.com/edellingham/roe-workshops-wp-plugin.git roe-workshops
+   
+   # Or download ZIP and extract
+   wget https://github.com/edellingham/roe-workshops-wp-plugin/archive/main.zip
+   unzip main.zip
+   mv roe-workshops-wp-plugin-main roe-workshops
+   ```
+
+2. **Upload to WordPress**
    ```bash
    # Upload to WordPress plugins directory
-   /wp-content/plugins/roe-workshops/
+   rsync -av roe-workshops/ your-server:/path/to/wordpress/wp-content/plugins/roe-workshops/
+   ```
+
+### Option 2: Direct Server Installation
+1. **SSH to your WordPress server**
+2. **Navigate to plugins directory**
+   ```bash
+   cd /path/to/wordpress/wp-content/plugins/
+   ```
+3. **Clone repository**
+   ```bash
+   git clone https://github.com/edellingham/roe-workshops-wp-plugin.git roe-workshops
    ```
 
 2. **Configure ODBC**
