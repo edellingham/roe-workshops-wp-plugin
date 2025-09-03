@@ -186,15 +186,28 @@ class ROE_Admin_Interface {
     }
     
     /**
-     * Test ODBC connection
+     * Test connection (API or ODBC based on settings)
      */
     private function test_odbc_connection() {
-        $connector = new ROE_ODBC_Connector();
+        $connection_method = get_option('roe_connection_method', 'api');
+        
+        if ($connection_method === 'api') {
+            $connector = new ROE_API_Connector();
+        } else {
+            $connector = new ROE_ODBC_Connector();
+        }
+        
         $test_result = $connector->test_connection();
         
         if ($test_result['success']) {
-            echo '<div class="notice notice-success"><p>Connection test successful! Found ' . 
-                 esc_html($test_result['workshop_count']) . ' workshops in database.</p></div>';
+            $message = 'Connection test successful!';
+            if (isset($test_result['workshop_count'])) {
+                $message .= ' Found ' . esc_html($test_result['workshop_count']) . ' workshops.';
+            }
+            if (isset($test_result['api_version'])) {
+                $message .= ' API Version: ' . esc_html($test_result['api_version']) . '.';
+            }
+            echo '<div class="notice notice-success"><p>' . $message . '</p></div>';
         } else {
             echo '<div class="notice notice-error"><p>Connection test failed: ' . 
                  esc_html($test_result['message']) . '</p></div>';
@@ -205,19 +218,31 @@ class ROE_Admin_Interface {
      * Save sync settings
      */
     private function save_sync_settings() {
-        // Sanitize and save settings
+        // Connection method
+        update_option('roe_connection_method', sanitize_text_field($_POST['connection_method']));
+        
+        // API settings
+        update_option('roe_api_url', esc_url_raw($_POST['api_url']));
+        if (!empty($_POST['api_key'])) {
+            update_option('roe_api_key', sanitize_text_field($_POST['api_key']));
+        }
+        if (!empty($_POST['api_admin_key'])) {
+            update_option('roe_api_admin_key', sanitize_text_field($_POST['api_admin_key']));
+        }
+        
+        // ODBC settings
         update_option('roe_odbc_dsn', sanitize_text_field($_POST['odbc_dsn']));
         update_option('roe_odbc_username', sanitize_text_field($_POST['odbc_username']));
+        if (!empty($_POST['odbc_password'])) {
+            update_option('roe_odbc_password', sanitize_text_field($_POST['odbc_password']));
+        }
+        
+        // General settings
         update_option('roe_sync_frequency', sanitize_text_field($_POST['sync_frequency']));
         update_option('roe_debug_mode', isset($_POST['debug_mode']));
         update_option('roe_company_name', sanitize_text_field($_POST['company_name']));
         update_option('roe_company_email', sanitize_email($_POST['company_email']));
         update_option('roe_web_include', sanitize_text_field($_POST['web_include']));
-        
-        // Handle password separately (only update if provided)
-        if (!empty($_POST['odbc_password'])) {
-            update_option('roe_odbc_password', sanitize_text_field($_POST['odbc_password']));
-        }
         
         // Reschedule cron job if frequency changed
         wp_clear_scheduled_hook('roe_workshop_sync');

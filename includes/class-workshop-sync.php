@@ -9,7 +9,14 @@ class ROE_Workshop_Sync {
     private $connector;
     
     public function __construct() {
-        $this->connector = new ROE_ODBC_Connector();
+        // Choose connection method based on settings
+        $connection_method = get_option('roe_connection_method', 'api');
+        
+        if ($connection_method === 'api') {
+            $this->connector = new ROE_API_Connector();
+        } else {
+            $this->connector = new ROE_ODBC_Connector();
+        }
     }
     
     /**

@@ -17,8 +17,55 @@ if (!defined('ABSPATH')) {
         <table class="form-table">
             <tbody>
                 
-                <!-- ODBC Connection Settings -->
+                <!-- Connection Method -->
                 <tr>
+                    <th scope="row"><label for="connection_method">Connection Method</label></th>
+                    <td>
+                        <select id="connection_method" name="connection_method">
+                            <option value="api" <?php selected(get_option('roe_connection_method', 'api'), 'api'); ?>>
+                                API Bridge (Recommended for remote servers)
+                            </option>
+                            <option value="odbc" <?php selected(get_option('roe_connection_method', 'api'), 'odbc'); ?>>
+                                Direct ODBC (Local server only)
+                            </option>
+                        </select>
+                        <p class="description">API Bridge allows WordPress to be on a different server than FileMaker</p>
+                    </td>
+                </tr>
+                
+                <!-- API Connection Settings -->
+                <tr class="api-settings">
+                    <th scope="row"><label for="api_url">API Bridge URL</label></th>
+                    <td>
+                        <input type="url" id="api_url" name="api_url" 
+                               value="<?php echo esc_attr(get_option('roe_api_url', 'https://roe24.org/Registration/api-bridge/bridge.php')); ?>" 
+                               class="regular-text" />
+                        <p class="description">Full URL to the API bridge on your FileMaker server</p>
+                    </td>
+                </tr>
+                
+                <tr class="api-settings">
+                    <th scope="row"><label for="api_key">API Key</label></th>
+                    <td>
+                        <input type="password" id="api_key" name="api_key" 
+                               placeholder="Enter API key from bridge installation" 
+                               class="regular-text" />
+                        <p class="description">Standard API key for workshop data access</p>
+                    </td>
+                </tr>
+                
+                <tr class="api-settings">
+                    <th scope="row"><label for="api_admin_key">Admin API Key</label></th>
+                    <td>
+                        <input type="password" id="api_admin_key" name="api_admin_key" 
+                               placeholder="Enter admin API key (optional)" 
+                               class="regular-text" />
+                        <p class="description">Admin key for IP whitelist management and logs (optional)</p>
+                    </td>
+                </tr>
+                
+                <!-- ODBC Connection Settings -->
+                <tr class="odbc-settings">
                     <th scope="row"><label for="odbc_dsn">ODBC DSN</label></th>
                     <td>
                         <input type="text" id="odbc_dsn" name="odbc_dsn" 
@@ -28,7 +75,7 @@ if (!defined('ABSPATH')) {
                     </td>
                 </tr>
                 
-                <tr>
+                <tr class="odbc-settings">
                     <th scope="row"><label for="odbc_username">ODBC Username</label></th>
                     <td>
                         <input type="text" id="odbc_username" name="odbc_username" 
@@ -38,7 +85,7 @@ if (!defined('ABSPATH')) {
                     </td>
                 </tr>
                 
-                <tr>
+                <tr class="odbc-settings">
                     <th scope="row"><label for="odbc_password">ODBC Password</label></th>
                     <td>
                         <input type="password" id="odbc_password" name="odbc_password" 

@@ -12,6 +12,18 @@
             setInterval(updateSyncStatus, 60000); // Check every minute
         }
         
+        // Toggle connection settings based on method
+        $('#connection_method').on('change', function() {
+            var method = $(this).val();
+            if (method === 'api') {
+                $('.api-settings').show();
+                $('.odbc-settings').hide();
+            } else {
+                $('.api-settings').hide();
+                $('.odbc-settings').show();
+            }
+        }).trigger('change');
+        
         // Confirm destructive actions
         $('input[name="clear_logs"]').on('click', function(e) {
             if (!confirm('Are you sure you want to clear all error logs? This action cannot be undone.')) {

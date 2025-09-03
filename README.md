@@ -16,9 +16,28 @@ WordPress plugin for Grundy/Kendall Regional Office of Education workshop regist
 ## Requirements
 
 - WordPress 5.0+
-- PHP 7.0+ with ODBC extension
-- FileMaker Pro database with ODBC access
-- ODBC DSN configured on server
+- PHP 7.0+
+- **For Remote Servers**: API bridge deployed on FileMaker server
+- **For Local Servers**: PHP ODBC extension + FileMaker ODBC driver
+
+## Connection Methods
+
+### API Bridge (Recommended for Remote Servers)
+The plugin can connect to FileMaker via HTTP API instead of direct ODBC. This allows:
+- WordPress site on different server than FileMaker
+- Better security (no direct database exposure)
+- Easier firewall management
+- More reliable connections over internet
+
+**Requirements**: API bridge from this repository must be deployed on the FileMaker server at:
+`/Registration/api-bridge/` (from the legacy site)
+
+### Direct ODBC (Local Server Only)
+Traditional ODBC connection for same-server deployments:
+- WordPress and FileMaker on same Windows server
+- Direct database access
+- Faster for local connections
+- Requires ODBC driver configuration
 
 ## Installation
 
@@ -66,9 +85,35 @@ WordPress plugin for Grundy/Kendall Regional Office of Education workshop regist
 
 4. **Configure Settings**
    - Go to ROE Workshops → Sync Settings
-   - Verify ODBC connection details
+   - Choose connection method (API Bridge or Direct ODBC)
+   - **For API Bridge**: Enter API URL and keys
+   - **For Direct ODBC**: Configure DSN and credentials
    - Test connection
    - Run initial sync
+
+## API Bridge Setup (For Remote Servers)
+
+If your WordPress site is on a different server than FileMaker, you need to deploy the API bridge:
+
+1. **Deploy API Bridge on FileMaker Server**
+   ```bash
+   # Copy from legacy site to active location
+   cp -r /old-site/Registration/api-bridge /active-site/Registration/
+   
+   # Or deploy standalone version
+   cp -r ROE_API_STANDALONE/* /inetpub/wwwroot/api/
+   ```
+
+2. **Configure API Bridge**
+   - Run the installer: `https://your-filemaker-server.com/Registration/api-bridge/install.php`
+   - Save the generated API keys
+   - Add your WordPress server IP to the whitelist
+
+3. **Configure WordPress Plugin**
+   - Connection Method: "API Bridge"
+   - API URL: `https://your-filemaker-server.com/Registration/api-bridge/bridge.php`
+   - API Key: [from installer]
+   - Test connection
 
 ## Usage
 
@@ -207,7 +252,13 @@ Copy templates to your active theme to customize:
 
 ### Common Issues
 
-**ODBC Connection Fails**
+**API Connection Fails**
+- Verify API bridge URL is accessible
+- Check API key is correct
+- Confirm WordPress server IP is whitelisted
+- Review API bridge logs on FileMaker server
+
+**ODBC Connection Fails** (Direct connection only)
 - Check DSN exists: Windows → ODBC Data Source Administrator
 - Verify FileMaker Server is running
 - Test connection from command line

@@ -37,7 +37,8 @@ class ROE_Workshops_Plugin {
     }
     
     private function load_dependencies() {
-        require_once ROE_WORKSHOPS_PLUGIN_DIR . 'includes/class-odbc-connector.php';
+        require_once ROE_WORKSHOPS_PLUGIN_DIR . 'includes/class-api-connector.php';
+        require_once ROE_WORKSHOPS_PLUGIN_DIR . 'includes/class-odbc-connector.php'; // Keep for fallback
         require_once ROE_WORKSHOPS_PLUGIN_DIR . 'includes/class-workshop-sync.php';
         require_once ROE_WORKSHOPS_PLUGIN_DIR . 'includes/class-admin-interface.php';
         require_once ROE_WORKSHOPS_PLUGIN_DIR . 'includes/class-frontend-display.php';
@@ -151,10 +152,18 @@ class ROE_Workshops_Plugin {
     }
     
     private function set_default_options() {
-        // Default plugin settings
+        // API Connection (Primary)
+        add_option('roe_connection_method', 'api'); // 'api' or 'odbc'
+        add_option('roe_api_url', 'https://roe24.org/Registration/api-bridge/bridge.php');
+        add_option('roe_api_key', '');
+        add_option('roe_api_admin_key', '');
+        
+        // ODBC Connection (Fallback)
         add_option('roe_odbc_dsn', 'CEDARWOOD');
         add_option('roe_odbc_username', 'webuser');
         add_option('roe_odbc_password', 'PDAcedar');
+        
+        // General Settings
         add_option('roe_sync_frequency', 'hourly');
         add_option('roe_debug_mode', false);
         add_option('roe_company_name', 'Grundy/Kendall Regional Office of Education');
