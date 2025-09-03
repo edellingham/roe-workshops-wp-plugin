@@ -1,0 +1,81 @@
+/* ROE Workshops Admin Styles */
+
+.roe-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.roe-stats-grid .postbox {
+    margin: 0;
+}
+
+.roe-stats-grid .postbox-header h3 {
+    margin: 0;
+    padding: 10px 15px;
+    background: #f1f1f1;
+    font-size: 14px;
+}
+
+.roe-stats-grid .inside {
+    text-align: center;
+    padding: 20px;
+}
+
+.roe-stats-grid .inside span {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+/* Log Level Styles */
+.roe-log-level {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8em;
+}
+
+.roe-log-error {
+    background: #dc3232;
+    color: white;
+}
+
+.roe-log-warning {
+    background: #ff8c00;
+    color: white;
+}
+
+.roe-log-info {
+    background: #0073aa;
+    color: white;
+}
+
+.roe-log-debug {
+    background: #666;
+    color: white;
+}
+
+/* Settings Form */
+.form-table th {
+    width: 200px;
+}
+
+.form-table .description {
+    font-style: italic;
+    color: #666;
+}
+
+/* Responsive admin layout */
+@media (max-width: 768px) {
+    .roe-stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .roe-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
